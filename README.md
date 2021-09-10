@@ -1,8 +1,8 @@
-#1 安装
+# 1 安装
 
 pip install auto_run_on_remote
 
-#2 auto_run_on_remote 介绍
+# 2 auto_run_on_remote 介绍
 
 ```
 全名字含义应该是 auto_run_current_python_script_on_remote_server
@@ -15,7 +15,7 @@ pip install auto_run_on_remote
 比pycahrm专业版复杂的配置调用远程python解释器更方便。
 ```
 
-# 用法如下
+# 3 用法如下
 ```
 在项目的任意目录层级下的脚本中运行 run_current_script_on_remote(),则脚本会自动运行在远程机器。
 当第一次运行脚本时候，会自动在你当项目的根目录生成 auto_run_on_remote_config.py 配置文件，然后，你自己按需修改其中的值。
@@ -44,7 +44,7 @@ for i in range(10):
 [![hXvZff.png](https://z3.ax1x.com/2021/09/10/hXvZff.png)](https://imgtu.com/i/hXvZff)
 
 
-配置文件 auto_run_on_remote_config.py 介绍
+# 4 配置文件 auto_run_on_remote_config.py 介绍
 ```python
 """
 这个配置文件是自动生成到你的项目根目录的。
