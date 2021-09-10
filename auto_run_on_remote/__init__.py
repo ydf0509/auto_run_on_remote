@@ -1,0 +1,1 @@
+from auto_run_on_remote.run_script_on_remote_server import run_current_script_on_remote
