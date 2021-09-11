@@ -15,7 +15,7 @@ class ParamikoFolderUploader(LoggerMixin, LoggerLevelSetterMixin):
                  path_pattern_exluded_tuple=('/.git/', '/.idea/', '/dist/', '/build/'),
                  file_suffix_tuple_exluded=('.pyc', '.log', '.gz'),
                  only_upload_within_the_last_modify_time=3650 * 24 * 60 * 60,
-                 file_volume_limit=1000 * 1000, sftp_log_level=10):
+                 file_volume_limit=1000 * 1000, sftp_log_level=20):
         """
 
         :param host:
