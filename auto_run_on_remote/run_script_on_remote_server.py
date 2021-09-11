@@ -22,7 +22,7 @@ else:
 
 def run_current_script_on_remote(pty=True):
     """
-    :param pty: 这个指的是本机带啊名结束，远程就会结束。为False则本机例如停电关机结束，远程代码还在继续运行。
+    :param pty: 这个指的是本机脚本结束，远程就会结束。为False则本机例如停电关机结束，远程代码还在继续运行。
     :return:
     """
     if remote_config.FORBID_DEPLOY_FROM_LINUX and os.name == 'posix':
@@ -32,15 +32,18 @@ def run_current_script_on_remote(pty=True):
         return
     logger.warning(f'将本地文件夹代码 {python_proj_dir}  上传到远程 {remote_config.HOST} 的 {remote_dir} 文件夹。')
     t_start = time.perf_counter()
-    uploader = ParamikoFolderUploader(remote_config.HOST, remote_config.PORT, remote_config.USER, remote_config.PASSWORD,
+    uploader = ParamikoFolderUploader(remote_config.HOST, remote_config.PORT, remote_config.USER,
+                                      remote_config.PASSWORD,
                                       python_proj_dir, remote_dir,
                                       path_pattern_exluded_tuple=remote_config.PATH_PATTERN_EXLUDED_TUPLE,
                                       file_suffix_tuple_exluded=remote_config.FILE_SUFFIX_TUPLE_EXLUDED,
                                       only_upload_within_the_last_modify_time=remote_config.ONLY_UPLOAD_WITHIN_THE_LAST_MODIFY_TIME,
-                                      file_volume_limit=remote_config.FILE_VOLUME_LIMIT, sftp_log_level=remote_config.SFTP_LOG_LEVEL)
+                                      file_volume_limit=remote_config.FILE_VOLUME_LIMIT,
+                                      sftp_log_level=remote_config.SFTP_LOG_LEVEL)
 
     uploader.upload()
-    logger.info(f'上传 本地文件夹代码 {python_proj_dir}  上传到远程 {remote_config.HOST} 的 {remote_dir} 文件夹耗时 {round(time.perf_counter() - t_start, 3)} 秒')
+    logger.info(
+        f'上传 本地文件夹代码 {python_proj_dir}  上传到远程 {remote_config.HOST} 的 {remote_dir} 文件夹耗时 {round(time.perf_counter() - t_start, 3)} 秒')
     # conn.run(f'''export PYTHONPATH={remote_dir}:$PYTHONPATH''')
     # 获取被调用函数所在模块文件名
     # print(sys._getframe())
@@ -49,7 +52,8 @@ def run_current_script_on_remote(pty=True):
     file_name = re.sub(f'^{python_proj_dir}', remote_dir, local_file_name)  # 远程文件名字。
     process_mark = f'auto_remote_run_mark__{file_name.replace("/", "__")[:-3]}'
 
-    conn = Connection(remote_config.HOST, port=remote_config.PORT, user=remote_config.USER, connect_kwargs={"password": remote_config.PASSWORD}, )
+    conn = Connection(remote_config.HOST, port=remote_config.PORT, user=remote_config.USER,
+                      connect_kwargs={"password": remote_config.PASSWORD}, )
     kill_shell = f'''ps -aux|grep {process_mark}|grep -v grep|awk '{{print $2}}' |xargs kill -9'''
     logger.warning(f'{kill_shell} 命令杀死 {process_mark} 标识的进程')
     uploader.ssh.exec_command(kill_shell)
@@ -62,5 +66,5 @@ def run_current_script_on_remote(pty=True):
         extra_shell_str2 += ';'
     shell_str = extra_shell_str2 + shell_str
     logger.warning(f'使用语句 {shell_str} 在远程机器 {remote_config.HOST} 上启动脚本 {file_name}')
-    conn.run(shell_str, encoding='utf-8',pty=pty)
+    conn.run(shell_str, encoding='utf-8', pty=pty)
     sys.exit()  # 使本机不执行代码。
