@@ -20,7 +20,11 @@ else:
     remote_dir = f'/home/{remote_config.USER}/pycodes/{python_proj_dir_short}/'
 
 
-def run_current_script_on_remote():
+def run_current_script_on_remote(pty=True):
+    """
+    :param pty: 这个指的是本机带啊名结束，远程就会结束。为False则本机例如停电关机结束，远程代码还在继续运行。
+    :return:
+    """
     if remote_config.FORBID_DEPLOY_FROM_LINUX and os.name == 'posix':
         # 一般生产机器是linux，是否禁止从linux部署到别的机器，这样可以防止你从生产环境远程到测试环境，配置后，即使生产环境的代码有远程部署，也不会执行远程部署而是直接运行。
         return
@@ -58,5 +62,5 @@ def run_current_script_on_remote():
         extra_shell_str2 += ';'
     shell_str = extra_shell_str2 + shell_str
     logger.warning(f'使用语句 {shell_str} 在远程机器 {remote_config.HOST} 上启动脚本 {file_name}')
-    conn.run(shell_str, encoding='utf-8')
+    conn.run(shell_str, encoding='utf-8',pty=pty)
     sys.exit()  # 使本机不执行代码。
