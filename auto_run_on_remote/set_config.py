@@ -16,7 +16,7 @@ PACKAGE_NAME = 'auto_run_on_remote'
 DEFAULT_CONFIG_MODLUE = 'remote_config'
 CUSTOM_CONFIG_MODULE_NAME = 'auto_run_on_remote_config'
 
-custom_config_module_path = Path(sys.path[1]) / Path(f'{CUSTOM_CONFIG_MODULE_NAME}.py')
+custom_config_module_path = Path(sys.path[1]).absolute() / Path(f'{CUSTOM_CONFIG_MODULE_NAME}.py')
 
 
 def use_config_form_config_module():
@@ -34,7 +34,7 @@ def use_config_form_config_module():
                 setattr(remote_config, var_namex, var_valuex)
     except ModuleNotFoundError:
         auto_creat_config_file_to_project_root_path()
-        msg = f'''在你的项目根目录下生成了 \n "{custom_config_module_path}:1" 的auto_run_on_remote包的远程上传项目代码的配置文件，快去看看并修改一些自定义配置吧'''
+        msg = f'''在你的项目根目录下生成了 \n "{custom_config_module_path}:1" 的 {PACKAGE_NAME} 包 的配置文件，快去看看并修改一些自定义配置吧'''
         print(msg)
 
 
@@ -44,9 +44,9 @@ def auto_creat_config_file_to_project_root_path():
     """
     :return:
     """
-    # if Path(sys.path[1]).as_posix() in Path(__file__).parent.absolute().as_posix():
-    #     print('不希望在本项目里面创建')
-    #     return
+    if Path(sys.path[1]).as_posix() in Path(__file__).parent.absolute().as_posix():
+        print('不希望在本项目里面创建')
+        return
     # noinspection PyPep8
     """
         如果没设置PYTHONPATH，sys.path会这样，取第一个就会报错
@@ -65,7 +65,7 @@ def auto_creat_config_file_to_project_root_path():
                                ''')
     # with (Path(sys.path[1]) / Path('nb_log_config.py')).open(mode='w', encoding='utf8') as f:
     #     f.write(config_file_content)
-    copyfile(Path(__file__).parent / Path(f'{DEFAULT_CONFIG_MODLUE}.py'), Path(sys.path[1]) / Path(f'{CUSTOM_CONFIG_MODULE_NAME}.py'))
+    copyfile(Path(__file__).parent / Path(f'{DEFAULT_CONFIG_MODLUE}.py'), custom_config_module_path)
 
 
 use_config_form_config_module()

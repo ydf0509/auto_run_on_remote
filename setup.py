@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='auto_run_on_remote',  #
-    version=0.2,
+    version=0.3,
     description=(
         'auto run current python script on remote server'
     ),
@@ -25,7 +25,7 @@ setup(
     # packages=['function_scheduling_distributed_framework'], # 这样内层级文件夹的没有打包进去。
     include_package_data=True,
     platforms=["all"],
-    url='https://github.com/ydf0509/distributed_framework',
+    url='https://github.com/ydf0509/auto_run_on_remote',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Operating System :: OS Independent',
@@ -40,8 +40,8 @@ setup(
         'Topic :: Software Development :: Libraries'
     ],
     install_requires=[
-        'nb_log'
-        'fabric2==2.6.0'  #有的机器包rust错误， 这样做 curl https://sh.rustup.rs -sSf | sh
+        'nb_log',
+        'fabric2==2.6.0',  #有的机器包rust错误， 这样做 curl https://sh.rustup.rs -sSf | sh
     ]
 )
 """
@@ -55,7 +55,7 @@ python setup.py sdist upload -r pypi
 
 # python setup.py bdist_wheel
 python setup.py bdist_wheel & twine upload dist/auto_run_on_remote-11.7-py3-none-any.whl
-python setup.py sdist & twine upload dist/auto_run_on_remote-0.2.tar.gz
+python setup.py sdist & twine upload dist/auto_run_on_remote-0.3.tar.gz
 
 最快的下载方式，上传立即可安装。阿里云源同步官网pypi间隔要等很久。
 ./pip install auto_run_on_remote==3.5 -i https://pypi.org/simple   
