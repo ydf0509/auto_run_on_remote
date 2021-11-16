@@ -12,7 +12,8 @@ pip install auto_run_on_remote
 自动上传文件夹 自动创建文件夹 自动远程机器上运行python脚本。
 原理是 run_current_script_on_remote() 函数中自动利用 sys._getframe(1).f_code.co_filename 获取当前文件位置，所以不用传参告诉函数当前脚本的位置。
 
-比pycahrm专业版复杂的配置调用远程python解释器更方便，因为pycahrm专业版如果设置了远程解释器启动脚本时候很卡，启动ide界面更卡，因为ide会去读远程解释器的所有安装的python包，真的是太卡了。
+比pycahrm专业版复杂的配置调用远程python解释器更方便，因为pycahrm专业版如果设置了远程解释器启动脚本时候很卡，
+启动ide界面更卡，因为ide会去读远程解释器的所有安装的python包，真的是太卡了。
 而这个在远程运行启动速度就很快，丝毫不会造成ide卡顿。
 ```
 
