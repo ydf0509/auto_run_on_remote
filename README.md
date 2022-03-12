@@ -15,6 +15,7 @@ pip install auto_run_on_remote
 比pycahrm专业版复杂的配置调用远程python解释器更方便，因为pycahrm专业版如果设置了远程解释器启动脚本时候很卡，
 启动ide界面更卡，因为ide会去读远程解释器的所有安装的python包，真的是太卡了。
 而这个在远程运行启动速度就很快，丝毫不会造成ide卡顿。
+还有就是破解最新版pycahrm麻烦老失效，用社区版就好了
 ```
 
 # 3 用法如下
