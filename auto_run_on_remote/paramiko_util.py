@@ -1,4 +1,3 @@
-#coding=utf-8
 import os
 import re
 import sys
@@ -13,10 +12,10 @@ class ParamikoFolderUploader(LoggerMixin, LoggerLevelSetterMixin):
     """
 
     def __init__(self, host, port, user, password, local_dir: str, remote_dir: str,
-                 path_pattern_exluded_tuple=('/.git/', '/.idea/', '/dist/', '/build/'),
+                 path_pattern_exluded_tuple=('/.git/', '/.idea/',),
                  file_suffix_tuple_exluded=('.pyc', '.log', '.gz'),
                  only_upload_within_the_last_modify_time=3650 * 24 * 60 * 60,
-                 file_volume_limit=1000 * 1000, sftp_log_level=20):
+                 file_volume_limit=1000 * 1000, sftp_log_level=10):
         """
 
         :param host:
@@ -59,6 +58,11 @@ class ParamikoFolderUploader(LoggerMixin, LoggerLevelSetterMixin):
 
         self.set_log_level(sftp_log_level)
 
+        self._has_upload_file_cnt = 0
+        self._has_filter_file_cnt = 0
+        self._has_upload_file_volume = 0
+        self._has_filter_file_volume = 0
+
     def _judge_need_filter_a_file(self, filename: str):
         ext = filename.split('.')[-1]
         if '.' + ext in self._file_suffix_tuple_exluded:
@@ -95,18 +99,27 @@ class ParamikoFolderUploader(LoggerMixin, LoggerLevelSetterMixin):
         for parent, dirnames, filenames in os.walk(self._local_dir):
             for filename in filenames:
                 file_full_name = os.path.join(parent, filename).replace('\\', '/')
+                volume = os.path.getsize(file_full_name)
                 if not self._judge_need_filter_a_file(file_full_name):
                     remote_full_file_name = re.sub(f'^{self._local_dir}', self._remote_dir, file_full_name)
                     try:
                         self.logger.debug(f'本地：{file_full_name}   远程： {remote_full_file_name}')
                         self.sftp.put(file_full_name, remote_full_file_name)
+
+                        self._has_upload_file_cnt +=1
+                        self._has_upload_file_volume += volume
                     except (FileNotFoundError,) as e:
                         # self.logger.warning(remote_full_file_name)
                         self._make_dir(os.path.split(remote_full_file_name)[0], os.path.split(remote_full_file_name)[0])
                         self.sftp.put(file_full_name, remote_full_file_name)
                 else:
-                    if '/.git' not in file_full_name and '.pyc' not in file_full_name:
-                        self.logger.debug(f'根据过滤规则，不上传这个文件 {file_full_name}')
+                    self.logger.debug(f'根据过滤规则，不上传这个文件 {file_full_name}')
+                    self._has_filter_file_cnt +=1
+                    self._has_filter_file_volume +=volume
+        self.logger.warning(f'''
+         总共上传文件数量: {self._has_upload_file_cnt} 个  ,  总共上传文件体积: {self._has_upload_file_volume/1000000} M ,  
+         总共过滤文件数量: {self._has_filter_file_cnt} 个  ,  总共过滤文件体积: {self._has_filter_file_volume/1000000} M   
+''')
 
 
 if __name__ == '__main__':

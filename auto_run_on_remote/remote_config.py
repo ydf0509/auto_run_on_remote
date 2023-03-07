@@ -8,6 +8,8 @@ import sys
 # pycahrm自动添加了项目根目录到第一个PYTHONPATH，如果是cmd命令启动这先设置PYTHONPATH环境变量。
 # windows设置  set PYTHONPATH=你当前python项目根目录,然后敲击你的python运行命令
 # linux设置    export PYTHONPATH=你当前python项目根目录,然后敲击你的python运行命令
+
+
 PYTHON_PROJ_DIR_LOCAL = sys.path[1]
 
 # 这是远程机器的账号密码配置。把这个配置文件加到gitignore就不会泄漏了。
